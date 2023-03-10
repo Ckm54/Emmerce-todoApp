@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'todo_api',
     'rest_framework',
     'corsheaders',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
