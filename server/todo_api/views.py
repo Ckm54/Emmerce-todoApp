@@ -28,7 +28,7 @@ class Todos(generics.GenericAPIView):
       "last_page": math.ceil(total_todos / limit_num),
       "todos": serializer.data
     })
-    
+
   def post(self, request):
     serializer = self.serializer_class(data=request.data)
     if (serializer.is_valid()):
@@ -39,3 +39,59 @@ class Todos(generics.GenericAPIView):
       }, status=status.HTTP_201_CREATED)
     else:
       return Response({"status": "failed", "message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+class TodoDetail(generics.GenericAPIView):
+  querySet = TodoModel.objects.all()
+  serializer_class = TodoSerializer
+
+  def get_todo(self, pk):
+    try:
+      return TodoModel.objects.get(pk=pk)
+    except:
+      return None
+
+  def get(self, request, pk):
+    todo = self.get_todo(pk=pk)
+    if (todo == None):
+      return Response({
+        "status": "fail",
+        "message": f"Todo item with id: {pk} not found",
+      }, status = status.HTTP_404_NOT_FOUND)
+    
+    serializer = self.serializer_class(todo)
+    return Response({
+      "status": "success",
+      "todo": serializer.data
+    })
+
+  def patch(self, request, pk):
+    todo = self.get_todo(pk)
+    if todo == None:
+      return Response({
+        "status": "failed",
+        "message": f"Todo item with id {pk} not found"
+      }, status=status.HTTP_404_NOT_FOUND)
+    serializer = self.serializer_class(
+      todo, data=request.data, partial=True
+    )
+
+    if serializer.is_valid():
+      serializer.validated_data['updatedAt'] = datetime.now()
+      serializer.save()
+      return Response({
+        "status": "success",
+        "todo": serializer.data
+      })
+    return Response({
+      "status": "fail",
+      "message": serializer.errors,
+    }, status=status.HTTP_400_BAD_REQUEST)
+  def delete(self, request, pk):
+    todo = self.get_todo(pk)
+    if todo == None:
+      return Response({
+        "status": "fail",
+        "message": f"Note with id {pk} not found"
+      }, status=status.HTTP_404_NOT_FOUND)
+    todo.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
