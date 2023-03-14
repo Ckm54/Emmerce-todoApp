@@ -13,17 +13,16 @@ import {
   ModalOverlay,
   Stack,
   Text,
-  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import React, { Dispatch, SetStateAction } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { createTodo } from "../../api/api";
-import { TodoFormData } from "../../types";
+import { createTodo, updateTodo } from "../../api/api";
+import { TodoFormData, Todo } from "../../types";
 
 type Props = {
   isOpen: boolean;
-  todoData: TodoFormData;
-  isUpdating: boolean;
+  todoData: TodoFormData | Todo;
   setTodoFormData: Dispatch<SetStateAction<{ title: string; description: string; }>>;
   handleInputChange: (e: React.FormEvent<HTMLInputElement>) => void;
   onClose: () => void;
@@ -36,35 +35,44 @@ const TodoForm = ({
   onOpen,
   todoData,
   handleInputChange,
-  isUpdating,
   setTodoFormData,
 }: Props) => {
+
   const [error, setError] = React.useState(false);
+  const [updating, setUpdating] = React.useState(false);
   const queryClient = useQueryClient();
+
+  const toast = useToast();
 
   const {mutate, isLoading} = useMutation((newTodo: TodoFormData) => createTodo(newTodo), {
     onSuccess: () => {
       queryClient.invalidateQueries("todos");
       setTodoFormData({title: '', description: ''});
       onClose();
+      toast({
+        title: 'Todo added.',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      })
     },
     onError: () => setError(true)
   })
 
+  
+
   const handleAddTodo = () => {
     mutate(todoData);
   };
-
-  const handleUpdateTodo = () => {};
-
   const handleSubmit = () => {
     setError(false)
     if (todoData.description === "" || todoData.title === "") {
       setError(true);
     } else {
-      isUpdating ? handleUpdateTodo() : handleAddTodo();
+      handleAddTodo();
     }
   };
+
   return (
     <>
       <Flex mt={5} mb={2} justifyContent="flex-end">
@@ -104,7 +112,10 @@ const TodoForm = ({
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="blue" mr={3} onClick={() => {
+              onClose()
+              setTodoFormData({title: '', description: ''})
+            }}>
               Cancel
             </Button>
             <Button isLoading={isLoading} onClick={handleSubmit} type="submit" colorScheme={'green'}>

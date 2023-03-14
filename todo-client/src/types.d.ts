@@ -22,4 +22,5 @@ export interface Todo {
 interface TodoFormData {
   title: string;
   description: string;
+  isComplete?: boolean
 }

@@ -1,4 +1,10 @@
-import { Text, useDisclosure } from "@chakra-ui/react";
+import {
+  Container,
+  Spinner,
+  Stack,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import React from "react";
 import { useQuery } from "react-query";
 import { fetchAllTodos } from "../api/api";
@@ -17,7 +23,25 @@ const AllTodos = (props: Props) => {
 
   const { data, isLoading, isError } = useQuery("todos", fetchAllTodos);
 
-  if (isLoading) return <Text>Loading...</Text>;
+  if (isLoading)
+    return (
+      <Stack
+        justifyContent={"center"}
+        alignItems="center"
+        height={"100vh"}
+        width={"100vh"}
+      >
+        <Container>
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
+          />
+        </Container>
+      </Stack>
+    );
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     setTodoFormData({
@@ -28,23 +52,19 @@ const AllTodos = (props: Props) => {
 
   return (
     <>
+      <Text fontSize={24} fontWeight='semibold' mt={10}>Your todos:</Text>
       <TodoForm
         setTodoFormData={setTodoFormData}
         handleInputChange={handleChange}
         todoData={todoFormData}
         onClose={onClose}
-        isUpdating={false}
         onOpen={onOpen}
         isOpen={isOpen}
       />
 
       {data &&
         data?.data.todos.map((todo: Todo) => (
-          <TodoItem
-            key={todo.id}
-            setTodoFormData={setTodoFormData}
-            todo={todo}
-          />
+          <TodoItem key={todo.id} todo={todo} />
         ))}
     </>
   );
