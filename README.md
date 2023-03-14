@@ -1,7 +1,6 @@
 
-# Project Title
-
-A brief description of what this project does and who it's for
+# TODO APP CRUD
+A todo fullstack app with all CRUD dunctionalities setup
 
 
 ## Installation
