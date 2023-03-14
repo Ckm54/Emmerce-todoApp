@@ -2,7 +2,9 @@ import axios from "axios";
 import { APIResponse, TodoFormData } from "../types";
 
 const BASE_URL = "http://localhost:8000/api/todos";
-const token = 'e8b3a734a8d07cca56dcce11b78f579e7ad864c7'
+const token = import.meta.env.VITE_REACT_APP_AUTH_TOKEN
+
+console.log("token", token)
 
 export const fetchAllTodos = async () => {
   const data: APIResponse = await axios.get(BASE_URL, {
