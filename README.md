@@ -258,4 +258,6 @@ sample response with status 204:
     }
 ```
 
+To view an interractive api documentation on swagger ui,  run server and visit:
+[Localhost swagger ui documentation] http://localhost:8000/swagger/ )
 
