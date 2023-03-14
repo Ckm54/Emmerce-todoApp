@@ -4,9 +4,11 @@ from todoApp.models import TodoModel
 from todoApp.serializers import TodoSerializer
 import math
 from datetime import datetime
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 class Todos(generics.GenericAPIView):
+  permission_classes = (IsAuthenticated,)
   serializer_class = TodoSerializer
   queryset = TodoModel.objects.all()
 
@@ -41,6 +43,7 @@ class Todos(generics.GenericAPIView):
       return Response({"status": "failed", "message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class TodoDetail(generics.GenericAPIView):
+  permission_classes = (IsAuthenticated,)
   querySet = TodoModel.objects.all()
   serializer_class = TodoSerializer
 

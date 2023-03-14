@@ -13,6 +13,16 @@ export const fetchAllTodos = async () => {
   return data;
 };
 
+export const getTodo = async (todoId: string) => {
+  const response = await axios.get(`${BASE_URL}/${todoId}`, {
+    headers: {
+      'Authorization': `Token ${token}`
+    }
+  });
+  
+  return response;
+};
+
 export const completeTodo = async (todoId: string, isComplete: boolean) => {
   const completedTodoStatus = { isComplete: !isComplete };
   const response = await axios.patch(`${BASE_URL}/${todoId}`, completedTodoStatus, {
