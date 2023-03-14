@@ -1,5 +1,5 @@
 
-# TODO crud
+# Project Title
 
 A brief description of what this project does and who it's for
 
@@ -182,6 +182,34 @@ sample error response when item not found by id:
     }
 ```
 
+#### Create todo
+
+```http
+  POST /api/todos/
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `title`      | `string` | **Required**. Id of item to fetch for complete todo |
+| `description`      | `string` | **Required**. Id of item to fetch for complete todo |
+
+
+sample response:
+
+```json
+    {
+    "status": "success",
+    "todo": {
+        "id": "a0161b9d-7ea7-4d67-b623-84f99942ac77",
+        "title": "Another sample todo item 02",
+        "description": "A sample second tood item",
+        "isComplete": false,
+        "createdAt": "2023-03-14T16:03:20.165738Z",
+        "updatedAt": "2023-03-14T20:51:00.054275Z"
+    }
+    }
+```
+
 #### Update todo
 
 ```http
@@ -190,7 +218,11 @@ sample error response when item not found by id:
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
+| `id`      | `string` | **Required**. Id of item to fetch for complete todo |
+| `title`      | `string` | **Required**. Id of item to fetch for complete todo |
+| `description`      | `string` | **Required**. Id of item to fetch for complete todo |
+| `isComplete`      | `string` | **optional / conditional**.  |
+
 
 sample response:
 
